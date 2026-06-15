@@ -23,8 +23,6 @@ enum ApiRequest {
     static let appsec = "5b9cf6c9786efd204dcf0c1ce2d08436"
 
     enum EndPoint {
-        static let loginQR = "https://passport.bilibili.com/x/passport-tv-login/qrcode/auth_code"
-        static let verifyQR = "https://passport.bilibili.com/x/passport-tv-login/qrcode/poll"
         static let refresh = "https://passport.bilibili.com/api/v2/oauth2/refresh_token"
         static let ssoCookie = "https://passport.bilibili.com/api/login/sso"
         static let feed = "https://app.bilibili.com/x/v2/feed/index"
@@ -153,25 +151,6 @@ enum ApiRequest {
         }
     }
 
-    static func requestLoginQR(handler: ((String, String) -> Void)? = nil) {
-        class Resp: Codable {
-            let authCode: String
-            let url: String
-        }
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-
-        request(EndPoint.loginQR, method: .post, auth: false, decoder: decoder) {
-            (result: Result<Resp, RequestError>) in
-            switch result {
-            case let .success(res):
-                handler?(res.authCode, res.url)
-            case let .failure(error):
-                print(error)
-            }
-        }
-    }
-
     struct LoginResp: Codable {
         struct CookieInfo: Codable {
             let domains: [String]
@@ -201,36 +180,6 @@ enum ApiRequest {
 
         var tokenInfo: LoginToken
         let cookieInfo: CookieInfo
-    }
-
-    static func verifyLoginQR(code: String, handler: ((LoginState) -> Void)? = nil) {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-
-        request(EndPoint.verifyQR,
-                method: .post, parameters: ["auth_code": code], auth: false, decoder: decoder)
-        {
-            (result: Result<LoginResp, RequestError>) in
-            switch result {
-            case var .success(res):
-                res.tokenInfo.expireDate = Date().addingTimeInterval(TimeInterval(res.tokenInfo.expiresIn))
-                let cookies = res.cookieInfo.toCookies()
-                CookieHandler.shared.saveCookie(list: cookies, syncWithAccount: false)
-                handler?(.success(token: res.tokenInfo, cookies: cookies))
-            case let .failure(error):
-                switch error {
-                case let .statusFail(code, _):
-                    switch code {
-                    case 86038: handler?(.expire)
-                    case 86039: handler?(.waiting)
-                    default:
-                        break
-                    }
-                default:
-                    break
-                }
-            }
-        }
     }
 
     static func refreshToken() {

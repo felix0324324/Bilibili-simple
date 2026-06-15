@@ -8,23 +8,14 @@
 
 
 ### 支持功能
-- 二维码登录
-- 云视听小电视投屏协议
 - 直播与弹幕
-- 推荐Feed
 - 热门
-- 排行榜
 - 搜索
 - 关注列表
 - 历史播放
-- 稍后再看
 - 系统播放器播放视频
 - 视频弹幕
-- 热门评论
 - 弹幕防挡
-- 云视听投屏
-- HDR播放
-- 字幕
 
  ![](imgs/1.jpg)
  ![](imgs/2.jpg)
@@ -46,5 +37,3 @@
 - [thmatuza/MPEGDASHAVPlayerDemo](https://github.com/thmatuza/MPEGDASHAVPlayerDemo)
 
 - [dreamCodeMan/B-webmask](https://github.com/dreamCodeMan/B-webmask)
-
-- [分析Bilibili客户端的“哔哩必连”协议](https://xfangfang.github.io/028)

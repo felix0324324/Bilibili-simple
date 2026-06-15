@@ -19,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ImageCache.default.diskStorage.config.sizeLimit = 500 * 1024 * 1024
         AVInfoPanelCollectionViewThumbnailCellHook.start()
         AccountManager.shared.bootstrap()
-        BiliBiliUpnpDMR.shared.start()
         URLSession.shared.configuration.headers.add(.userAgent("BiLiBiLi AppleTV Client/1.0.0 (github/yichengchen/ATV-Bilibili-live-demo)"))
         window = UIWindow()
         if ApiRequest.isLogin() {
@@ -33,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             window?.rootViewController = BLTabBarViewController()
         } else {
-            window?.rootViewController = LoginViewController.create()
+            window?.rootViewController = BLTabBarViewController()
         }
         WebRequest.requestIndex()
         window?.makeKeyAndVisible()
@@ -45,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func showLogin() {
-        replaceRootViewController(with: LoginViewController.create(), animated: false)
+        replaceRootViewController(with: BLTabBarViewController(), animated: false)
     }
 
     func showTabBar() {

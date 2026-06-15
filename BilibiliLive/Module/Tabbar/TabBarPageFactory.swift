@@ -13,12 +13,8 @@ class TabBarPageVCFactory {
         switch page {
         case .live:
             vc = LiveViewController()
-        case .feed:
-            vc = FeedViewController()
         case .hot:
             vc = HotViewController()
-        case .ranking:
-            vc = RankingViewController()
         case .follows:
             vc = FollowsViewController()
         case .favorite:
@@ -36,8 +32,6 @@ class TabBarPageVCFactory {
             vc = FollowBangumiViewController()
         case .followUps:
             vc = FollowUpsViewController()
-        case .toView:
-            vc = ToViewViewController()
         case .history:
             vc = HistoryViewController()
         case .weeklyWatch:

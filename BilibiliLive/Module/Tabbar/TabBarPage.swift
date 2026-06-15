@@ -8,16 +8,13 @@ import UIKit
 
 enum TabBarPage: String, CaseIterable, Codable {
     case live
-    case feed
     case hot
-    case ranking
     case follows
     case favorite
     case personal
     case search
     case followBangumi
     case followUps
-    case toView
     case history
     case weeklyWatch
 
@@ -25,12 +22,8 @@ enum TabBarPage: String, CaseIterable, Codable {
         switch self {
         case .live:
             return "直播"
-        case .feed:
-            return "推荐"
         case .hot:
             return "热门"
-        case .ranking:
-            return "排行榜"
         case .follows:
             return "关注"
         case .favorite:
@@ -43,8 +36,6 @@ enum TabBarPage: String, CaseIterable, Codable {
             return "追番追剧"
         case .followUps:
             return "关注UP"
-        case .toView:
-            return "稍后再看"
         case .history:
             return "历史记录"
         case .weeklyWatch:
@@ -66,7 +57,7 @@ enum TabBarPage: String, CaseIterable, Codable {
     }
 
     static var defaultTabBarPages: [TabBarPage] {
-        [.live, .feed, .hot, .ranking, .follows, .favorite, .personal, .search]
+        [.live, .hot, .follows, .favorite, .personal, .search]
     }
 
     static var allConfigurablePages: [TabBarPage] {

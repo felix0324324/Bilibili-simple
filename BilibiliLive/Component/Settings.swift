@@ -69,17 +69,8 @@ enum Settings {
     @UserDefault("Settings.contentMatch", defaultValue: true)
     static var contentMatch: Bool
 
-    @UserDefault("Settings.contentMatchOnlyInHDR", defaultValue: true)
-    static var contentMatchOnlyInHDR: Bool
-
     @UserDefault("Settings.continuePlay", defaultValue: true)
     static var continuePlay: Bool
-
-    @UserDefault("DLNA.uuid", defaultValue: "")
-    static var uuid: String
-
-    @UserDefault("DLNA.enable", defaultValue: true)
-    static var enableDLNA: Bool
 
     @UserDefault("Settings.continouslyPlay", defaultValue: true)
     static var continouslyPlay: Bool
@@ -289,7 +280,6 @@ extension DanmuArea {
 enum MediaQualityEnum: Codable, CaseIterable {
     case quality_1080p
     case quality_2160p
-    case quality_hdr_dolby
 }
 
 extension MediaQualityEnum {
@@ -299,8 +289,6 @@ extension MediaQualityEnum {
             return "1080p"
         case .quality_2160p:
             return "4K"
-        case .quality_hdr_dolby:
-            return "杜比视界"
         }
     }
 
@@ -310,8 +298,6 @@ extension MediaQualityEnum {
             return 116
         case .quality_2160p:
             return 120
-        case .quality_hdr_dolby:
-            return 126
         }
     }
 
@@ -321,8 +307,6 @@ extension MediaQualityEnum {
             return 16
         case .quality_2160p:
             return 144
-        case .quality_hdr_dolby:
-            return 976
         }
     }
 }

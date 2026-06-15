@@ -48,16 +48,7 @@ class BVideoPlayPlugin: NSObject, CommonPlayerPlugin {
         ]
         let asset = AVURLAsset(url: playURL, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
         playerDelegate = BilibiliVideoResourceLoaderDelegate()
-        playerDelegate?.setBilibili(info: urlInfo, subtitles: playerInfo?.subtitle?.subtitles ?? [], aid: playData.aid, maxQuality: maxQuality, streamIndex: streamIndex)
-
-        // 只在初次加载时设置 appliesPreferredDisplayCriteriaAutomatically，切换画质时跳过
-        if !isQualitySwitch {
-            if Settings.contentMatchOnlyInHDR {
-                if playerDelegate?.isHDR != true {
-                    playerVC?.appliesPreferredDisplayCriteriaAutomatically = false
-                }
-            }
-        }
+        playerDelegate?.setBilibili(info: urlInfo, aid: playData.aid, maxQuality: maxQuality, streamIndex: streamIndex)
 
         asset.resourceLoader.setDelegate(playerDelegate, queue: DispatchQueue(label: "loader"))
         let playable = try await asset.load(.isPlayable)

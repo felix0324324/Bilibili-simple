@@ -4,7 +4,6 @@ import UIKit
 final class AccountSwitcherViewController: UIViewController {
     private enum Section: Int, CaseIterable {
         case accounts
-        case actions
     }
 
     private let containerView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
@@ -124,9 +123,7 @@ final class AccountSwitcherViewController: UIViewController {
     }
 
     private func presentLogin() {
-        dismiss(animated: true) {
-            AppDelegate.shared.showLogin()
-        }
+        dismiss(animated: true) {}
     }
 
     private func switchToAccount(_ account: AccountManager.Account) {
@@ -180,8 +177,6 @@ extension AccountSwitcherViewController: UICollectionViewDelegate {
             let account = accounts[indexPath.item]
             guard account.profile.mid != AccountManager.shared.activeAccount?.profile.mid else { return }
             switchToAccount(account)
-        case .actions:
-            presentLogin()
         }
     }
 }

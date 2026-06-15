@@ -114,11 +114,6 @@ class SettingsViewController: UIViewController {
     private func setupData() {
         createSnapshot {
             SectionModel(title: "通用") {
-                Toggle(title: "启用投屏", setting: Settings.enableDLNA, onChange: Settings.enableDLNA.toggle()) {
-                    _ in
-                    BiliBiliUpnpDMR.shared.start()
-                }
-
                 Toggle(title: "热门个性化推荐", setting: Settings.requestHotWithoutCookie, onChange: Settings.requestHotWithoutCookie.toggle())
             }
 
@@ -168,7 +163,6 @@ class SettingsViewController: UIViewController {
                 Toggle(title: "Avc优先(卡顿尝试开启)", setting: Settings.preferAvc, onChange: Settings.preferAvc.toggle())
                 Toggle(title: "无损音频和杜比全景声", setting: Settings.losslessAudio, onChange: Settings.losslessAudio.toggle())
                 Toggle(title: "匹配视频内容", setting: Settings.contentMatch, onChange: Settings.contentMatch.toggle())
-                Toggle(title: "仅在HDR视频匹配视频内容", setting: Settings.contentMatchOnlyInHDR, onChange: Settings.contentMatchOnlyInHDR.toggle())
             }
 
             SectionModel(title: "进度控制") {
