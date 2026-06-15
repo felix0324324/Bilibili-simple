@@ -523,22 +523,6 @@ extension VideoDetailViewController {
             return section
         }
     }
-
-    func makeRelatedVideoCollectionViewLayout() -> UICollectionViewLayout {
-        UICollectionViewCompositionalLayout {
-            _, _ in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .estimated(200))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.18), heightDimension: .estimated(200))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            let section = NSCollectionLayoutSection(group: group)
-            section.contentInsets = .init(top: 40, leading: 0, bottom: 0, trailing: 0)
-            section.orthogonalScrollingBehavior = .continuous
-            section.interGroupSpacing = 40
-            return section
-        }
-    }
 }
 
 class RelatedVideoCell: BLMotionCollectionViewCell {
