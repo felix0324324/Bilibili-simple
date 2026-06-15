@@ -1025,13 +1025,20 @@ struct UpSpaceReq: Codable, Hashable {
 
 struct PlayerInfo: Codable {
     let last_play_time: Int
-    let subtitle: SubtitleResp?
     let view_points: [ViewPoint]?
     let dm_mask: MaskInfo?
     let last_play_cid: Int
     let is_upower_exclusive: Bool?
     var playTimeInSecond: Int {
         last_play_time / 1000
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case last_play_time
+        case view_points
+        case dm_mask
+        case last_play_cid
+        case is_upower_exclusive
     }
 
     class ViewPoint: Codable {
