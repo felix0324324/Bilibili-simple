@@ -461,6 +461,7 @@ extension VideoDetailViewController: UICollectionViewDelegate {
             let page = pages[indexPath.item]
             let player = VideoPlayerViewController(playInfo: PlayInfo(aid: isBangumi ? page.page : aid, cid: page.cid, epid: page.epid, seasonId: seasonId, subType: subType, lastPlayCid: lastPlayCid, playTimeInSecond: playTimeInSecond, title: page.part))
             player.data = isBangumi ? nil : data
+
             let seq = pages.dropFirst(indexPath.item).map({ PlayInfo(aid: isBangumi ? $0.page : aid, cid: $0.cid, epid: $0.epid, seasonId: seasonId, subType: subType, title: $0.part) })
             if seq.count > 0 {
                 let nextProvider = VideoNextProvider(seq: seq)
