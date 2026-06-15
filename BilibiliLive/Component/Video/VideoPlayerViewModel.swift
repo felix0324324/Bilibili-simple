@@ -62,7 +62,6 @@ class VideoPlayerViewModel {
         if !playInfo.isCidVaild {
             playInfo.cid = try await WebRequest.requestCid(aid: playInfo.aid)
         }
-        BiliBiliUpnpDMR.shared.sendVideoSwitch(aid: playInfo.aid, cid: playInfo.cid ?? 0)
     }
 
     private func updateVideoDetailIfNeeded() async {
@@ -134,7 +133,6 @@ class VideoPlayerViewModel {
     @MainActor private func generatePlayerPlugin(_ data: PlayerDetailData) async -> [CommonPlayerPlugin] {
         let playplugin = BVideoPlayPlugin(detailData: data)
         let danmu = DanmuViewPlugin(provider: danmuProvider)
-        let upnp = BUpnpPlugin(duration: data.detail?.View.duration)
         let debug = DebugPlugin()
         let playSpeed = SpeedChangerPlugin()
         playSpeed.$currentPlaySpeed.sink { [weak danmu] speed in
@@ -158,7 +156,7 @@ class VideoPlayerViewModel {
             }
         }
 
-        var plugins: [CommonPlayerPlugin] = [playplugin, danmu, playSpeed, upnp, debug, playlist, qualitySelector]
+        var plugins: [CommonPlayerPlugin] = [playplugin, danmu, playSpeed, debug, playlist, qualitySelector]
 
         if let clips = data.clips {
             let clip = BVideoClipsPlugin(clipInfos: clips)

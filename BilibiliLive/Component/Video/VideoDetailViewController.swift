@@ -73,7 +73,6 @@ class VideoDetailViewController: UIViewController {
     private var startTime = 0
     private var pages = [VideoPage]()
     private var replys: Replys?
-    private var subTitles: [SubtitleData]?
 
     private var allUgcEpisodes = [VideoDetail.Info.UgcSeason.UgcVideoInfo]()
 
