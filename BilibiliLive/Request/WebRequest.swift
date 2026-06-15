@@ -821,6 +821,8 @@ extension VideoDetail.Info: DisplayData, PlayableData {
         rightItems.append(DisplayOverlay.DisplayOverlayItem(icon: nil, text: TimeInterval(duration).timeString()))
         return DisplayOverlay(leftItems: leftItems, rightItems: rightItems)
     }
+}
+
 struct Replys: Codable, Hashable {
     struct Reply: Codable, Hashable {
         struct Member: Codable, Hashable {
