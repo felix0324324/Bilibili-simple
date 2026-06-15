@@ -149,8 +149,8 @@ extension AccountSwitcherViewController: UICollectionViewDataSource {
         switch section {
         case .accounts:
             return accounts.count
-        case .actions:
-            return 1
+//        case .actions:
+//            return 1
         }
     }
 
@@ -162,9 +162,9 @@ extension AccountSwitcherViewController: UICollectionViewDataSource {
             let account = accounts[indexPath.item]
             cell.configure(with: account, active: account.profile.mid == AccountManager.shared.activeAccount?.profile.mid)
             return cell
-        case .actions:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AccountSwitcherAddCell.reuseIdentifier, for: indexPath) as! AccountSwitcherAddCell
-            return cell
+//        case .actions:
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AccountSwitcherAddCell.reuseIdentifier, for: indexPath) as! AccountSwitcherAddCell
+//            return cell
         }
     }
 }

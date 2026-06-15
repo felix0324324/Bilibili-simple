@@ -3,6 +3,7 @@
   "strings" : {
     "Cancel" : {
       "comment" : "Cancel Action",
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -14,6 +15,7 @@
     },
     "Confirm Delete" : {
       "comment" : "Delete Alert title",
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -25,6 +27,7 @@
     },
     "Delete" : {
       "comment" : "Delete Action",
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -36,6 +39,7 @@
     },
     "Delete this video from your watch later list" : {
       "comment" : "Delete Alert message",
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
