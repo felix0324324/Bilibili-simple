@@ -42,15 +42,9 @@ class VideoDetailViewController: UIViewController {
     @IBOutlet var avatarImageView: UIImageView!
     @IBOutlet var favButton: BLCustomButton!
     @IBOutlet var pageCollectionView: UICollectionView!
-    @IBOutlet var recommandCollectionView: UICollectionView!
-    @IBOutlet var replysCollectionView: UICollectionView!
-    @IBOutlet var repliesCollectionViewHeightConstraints: NSLayoutConstraint!
-    @IBOutlet var ugcCollectionView: UICollectionView!
 
     @IBOutlet var pageView: UIView!
 
-    @IBOutlet var ugcLabel: UILabel!
-    @IBOutlet var ugcView: UIView!
     private var epid = 0
     private var seasonId = 0
     private var aid = 0
@@ -72,9 +66,6 @@ class VideoDetailViewController: UIViewController {
     private var isBangumi = false
     private var startTime = 0
     private var pages = [VideoPage]()
-    private var replys: Replys?
-
-    private var allUgcEpisodes = [VideoDetail.Info.UgcSeason.UgcVideoInfo]()
 
     private var subscriptions = [AnyCancellable]()
 
@@ -104,10 +95,6 @@ class VideoDetailViewController: UIViewController {
 
         pageCollectionView.register(BLTextOnlyCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: BLTextOnlyCollectionViewCell.self))
         pageCollectionView.collectionViewLayout = makePageCollectionViewLayout()
-        recommandCollectionView.register(RelatedVideoCell.self, forCellWithReuseIdentifier: String(describing: RelatedVideoCell.self))
-        ugcCollectionView.register(RelatedVideoCell.self, forCellWithReuseIdentifier: String(describing: RelatedVideoCell.self))
-        recommandCollectionView.collectionViewLayout = makeRelatedVideoCollectionViewLayout()
-        ugcCollectionView.collectionViewLayout = makeRelatedVideoCollectionViewLayout()
         noteView.onPrimaryAction = {
             [weak self] note in
             let detail = ContentDetailViewController.createDesp(content: note.label.text ?? "")
@@ -133,11 +120,6 @@ class VideoDetailViewController: UIViewController {
             focusGuide.bottomAnchor.constraint(equalTo: actionButtonSpaceView.bottomAnchor),
         ])
         focusGuide.preferredFocusEnvironments = [dislikeButton]
-
-        replysCollectionView.publisher(for: \.contentSize).sink { [weak self] newSize in
-            self?.repliesCollectionViewHeightConstraints.constant = newSize.height
-            self?.view.setNeedsLayout()
-        }.store(in: &subscriptions)
     }
 
     override var preferredFocusedView: UIView? {
@@ -193,7 +175,6 @@ class VideoDetailViewController: UIViewController {
         backgroundImageView.alpha = 0
         setupLoading()
         pageView.isHidden = true
-        ugcView.isHidden = true
         do {
             if seasonId > 0 {
                 isBangumi = true
@@ -257,11 +238,6 @@ class VideoDetailViewController: UIViewController {
             }
         }
 
-        WebRequest.requestReplys(aid: aid) { [weak self] replys in
-            self?.replys = replys
-            self?.replysCollectionView.reloadData()
-        }
-
         WebRequest.requestLikeStatus(aid: aid) { [weak self] isLiked in
             self?.likeButton.isOn = isLiked
         }
@@ -272,7 +248,6 @@ class VideoDetailViewController: UIViewController {
 
         if isBangumi {
             favButton.isHidden = true
-            recommandCollectionView.superview?.isHidden = true
             return
         }
 
@@ -345,7 +320,6 @@ class VideoDetailViewController: UIViewController {
 
         coverImageView.kf.setImage(with: data.pic)
         backgroundImageView.kf.setImage(with: data.pic)
-        recommandCollectionView.superview?.isHidden = data.Related.count == 0
 
         var notes = [String]()
         let status = data.View.dynamic ?? ""
@@ -372,26 +346,6 @@ class VideoDetailViewController: UIViewController {
         UIView.animate(withDuration: 0.25) {
             self.backgroundImageView.alpha = 1
         }
-
-        if let season = data.View.ugc_season {
-            if season.sections.count > 1 {
-                if let section = season.sections.first(where: { section in section.episodes.contains(where: { episode in episode.aid == data.View.aid }) }) {
-                    allUgcEpisodes = section.episodes
-                }
-            } else {
-                allUgcEpisodes = season.sections.first?.episodes ?? []
-            }
-            allUgcEpisodes.sort { $0.arc.ctime < $1.arc.ctime }
-        }
-
-        ugcCollectionView.reloadData()
-        ugcLabel.text = "合集 \(data.View.ugc_season?.title ?? "")  \(data.View.ugc_season?.sections.first?.title ?? "")"
-        ugcView.isHidden = allUgcEpisodes.count == 0
-        if allUgcEpisodes.count > 0 {
-            ugcCollectionView.scrollToItem(at: IndexPath(item: allUgcEpisodes.map { $0.aid }.firstIndex(of: aid) ?? 0, section: 0), at: .left, animated: false)
-        }
-
-        recommandCollectionView.reloadData()
     }
 
     @IBAction func actionShowUpSpace(_ sender: Any) {
@@ -412,13 +366,6 @@ class VideoDetailViewController: UIViewController {
         player.data = data
         if pages.count > 0, let index = pages.firstIndex(where: { $0.cid == cid }) {
             let seq = pages.dropFirst(index).map({ PlayInfo(aid: aid, cid: $0.cid, epid: $0.epid, seasonId: seasonId, subType: subType, title: $0.part) })
-            if seq.count > 0 {
-                let nextProvider = VideoNextProvider(seq: seq)
-                player.nextProvider = nextProvider
-            }
-        }
-        if allUgcEpisodes.count > 0, let index = allUgcEpisodes.firstIndex(where: { $0.cid == cid }) {
-            let seq = allUgcEpisodes.dropFirst(index).map({ PlayInfo(aid: $0.aid, cid: $0.cid, title: $0.title) })
             if seq.count > 0 {
                 let nextProvider = VideoNextProvider(seq: seq)
                 player.nextProvider = nextProvider
@@ -514,38 +461,12 @@ extension VideoDetailViewController: UICollectionViewDelegate {
             let page = pages[indexPath.item]
             let player = VideoPlayerViewController(playInfo: PlayInfo(aid: isBangumi ? page.page : aid, cid: page.cid, epid: page.epid, seasonId: seasonId, subType: subType, lastPlayCid: lastPlayCid, playTimeInSecond: playTimeInSecond, title: page.part))
             player.data = isBangumi ? nil : data
-
             let seq = pages.dropFirst(indexPath.item).map({ PlayInfo(aid: isBangumi ? $0.page : aid, cid: $0.cid, epid: $0.epid, seasonId: seasonId, subType: subType, title: $0.part) })
             if seq.count > 0 {
                 let nextProvider = VideoNextProvider(seq: seq)
                 player.nextProvider = nextProvider
             }
             present(player, animated: true, completion: nil)
-        case replysCollectionView:
-            guard let reply = replys?.replies?[indexPath.item] else { return }
-            let detail = ReplyDetailViewController(reply: reply)
-            present(detail, animated: true)
-        case ugcCollectionView:
-            let video = allUgcEpisodes[indexPath.item]
-            if Settings.showRelatedVideoInCurrentVC {
-                aid = video.aid
-                cid = video.cid
-                Task { await fetchData() }
-            } else {
-                let detailVC = VideoDetailViewController.create(aid: video.aid, cid: video.cid)
-                detailVC.present(from: self)
-            }
-        case recommandCollectionView:
-            if let video = data?.Related[indexPath.item] {
-                if Settings.showRelatedVideoInCurrentVC {
-                    aid = video.aid
-                    cid = video.cid
-                    Task { await fetchData() }
-                } else {
-                    let detailVC = VideoDetailViewController.create(aid: video.aid, cid: video.cid)
-                    detailVC.present(from: self)
-                }
-            }
         default:
             break
         }
@@ -557,12 +478,6 @@ extension VideoDetailViewController: UICollectionViewDataSource {
         switch collectionView {
         case pageCollectionView:
             return pages.count
-        case replysCollectionView:
-            return replys?.replies?.count ?? 0
-        case ugcCollectionView:
-            return allUgcEpisodes.count
-        case recommandCollectionView:
-            return data?.Related.count ?? 0
         default:
             return 0
         }
@@ -574,23 +489,6 @@ extension VideoDetailViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BLTextOnlyCollectionViewCell", for: indexPath) as! BLTextOnlyCollectionViewCell
             let page = pages[indexPath.item]
             cell.titleLabel.text = page.part
-            return cell
-        case replysCollectionView:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ReplyCell.self), for: indexPath) as! ReplyCell
-            if let reply = replys?.replies?[indexPath.item] {
-                cell.config(replay: reply)
-            }
-            return cell
-        case ugcCollectionView:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: RelatedVideoCell.self), for: indexPath) as! RelatedVideoCell
-            let record = allUgcEpisodes[indexPath.row]
-            cell.update(data: record)
-            return cell
-        case recommandCollectionView:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: RelatedVideoCell.self), for: indexPath) as! RelatedVideoCell
-            if let related = data?.Related[indexPath.row] {
-                cell.update(data: related)
-            }
             return cell
         default:
             return UICollectionViewCell()
