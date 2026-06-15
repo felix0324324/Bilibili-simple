@@ -616,6 +616,7 @@
                         <outlet property="playButton" destination="lfB-VX-ver" id="9XU-MT-KOf"/>
                         <outlet property="playCountLabel" destination="ahl-Fa-Qpg" id="q6V-be-wNj"/>
                         <outlet property="scrollView" destination="Dm8-CL-kxU" id="R6I-to-71J"/>
+                        <outlet property="titleLabel" destination="kwE-Zo-p5T" id="3Fx-I9-hrS"/>
                         <outlet property="upButton" destination="a2g-fL-QNx" id="Rbg-yt-8FJ"/>
                         <outlet property="uploadTimeLabel" destination="tIx-Fo-PpM" id="PO2-EA-rPf"/>
                     </connections>
